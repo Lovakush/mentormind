@@ -24,16 +24,11 @@ const VARIANTS = {
 };
 
 const ICONS = {
-  message: MessageSquare,
-  checkCircle: CheckCircle,
-  fileText: FileText,
-  newspaper: Newspaper,
-  bookOpen: BookOpen,
-  target: Target,
-  clock: Clock,
-  barChart2: BarChart2,
-  calculator: Calculator,
-  brain: Brain
+  bookOpen: BookOpen,      
+  target: Target,          
+  brain: Brain,            
+  calculator: Calculator,  
+  fileText: FileText 
 };
 
 const ChatCard = ({ icon, title, description, variant = 'yellow', onClick }) => {
@@ -44,8 +39,9 @@ const ChatCard = ({ icon, title, description, variant = 'yellow', onClick }) => 
       onClick={onClick}
       className={`
         ${VARIANTS[variant] || VARIANTS.yellow}
-        p-4 rounded-lg text-left transition-colors w-full group
+        p-4 rounded-lg text-left transition-all w-full group
         flex flex-col h-full
+        hover:shadow-md hover:scale-102 active:scale-98
       `}
     >
       <div className="flex items-start justify-between mb-2">

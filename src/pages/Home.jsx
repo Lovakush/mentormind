@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LineChart, Trophy, Target, Clock, FileText, BarChart2, Users } from 'lucide-react';
-
+import Header from '../components/layouts/Header';
+import Footer from '../components/layouts/Footer';
 const Home = () => {
   const features = [
     {
@@ -46,6 +47,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
+      <Header />
       <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-50 to-white">
         <div className="max-w-7xl mx-auto text-center">
           <div className="bg-amber-100 text-amber-800 text-sm px-4 py-1 rounded-full inline-flex items-center mb-8">
@@ -236,6 +238,7 @@ const Home = () => {
           </Link>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };

@@ -1,73 +1,35 @@
-import { useState } from 'react';
-import { PlusCircle, Send, FileText, Newspaper, Brain } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Send } from 'lucide-react';
 
-const suggestedOptions = [
-  {
-    icon: FileText,
-    label: 'Generate Quant MCQs'
-  },
-  {
-    icon: Brain,
-    label: 'Practice Reasoning'
-  },
-  {
-    icon: Newspaper,
-    label: 'Current Affairs Update'
-  }
-];
-
-const ChatInput = ({ onSendMessage, disabled, placeholder }) => {
-  const [message, setMessage] = useState('');
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+const ChatInput = ({ onSendMessage, disabled, placeholder, message, setMessage }) => {
+  const inputRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (message.trim() && !disabled) {
+    if (message?.trim() && !disabled) {
       onSendMessage(message);
       setMessage('');
-      setShowSuggestions(false);
     }
   };
 
-  const handlePlusClick = () => {
-    if (!disabled) {
-      setShowSuggestions(!showSuggestions);
-      setIsInputFocused(true);
+  // Focus input when message prop changes (for quick actions)
+  useEffect(() => {
+    if (message && inputRef.current) {
+      inputRef.current.focus();
     }
-  };
+  }, [message]);
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 z-50">
-      <div className="max-w-3xl mx-auto px-4">
-        {/* Suggestions Popover */}
-        {showSuggestions && (
-          <div className="absolute bottom-full mb-2 w-full bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-            {suggestedOptions.map((option, index) => (
-              <button
-                key={index}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 border-b last:border-b-0 border-gray-100"
-                onClick={() => {
-                  setMessage(option.label);
-                  setShowSuggestions(false);
-                }}
-              >
-                <option.icon className="w-5 h-5 text-gray-600" />
-                <span className="text-gray-700">{option.label}</span>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Input Form */}
-        <form onSubmit={handleSubmit} className="relative">
+    <div className="w-full bg-white">
+    <div className="max-w-3xl mx-auto px-4 py-4"> {/* Changed padding */}
+      <form onSubmit={handleSubmit} className="relative">
           <div className="relative flex items-center">
             <input
+              ref={inputRef}
               type="text"
-              value={message}
+              value={message || ''}
               onChange={(e) => setMessage(e.target.value)}
-              onFocus={() => setIsInputFocused(true)}
-              placeholder={placeholder || "Ask me anything about SSC CGL..."}
+              placeholder={placeholder || "Ask anything about your studies (Class 8-12)..."}
               disabled={disabled}
               className={`
                 w-full px-4 py-3
@@ -78,41 +40,37 @@ const ChatInput = ({ onSendMessage, disabled, placeholder }) => {
                 shadow-lg
                 text-base
                 placeholder-gray-500
-                ${disabled ? 'bg-gray-50 text-gray-400' : ''}
+                disabled:bg-gray-50 disabled:text-gray-400
+                disabled:cursor-not-allowed
               `}
             />
-            {!disabled && (
-              !message.trim() ? (
-                <button
-                  type="button"
-                  onClick={handlePlusClick}
-                  className="
-                    absolute right-2
-                    text-blue-600 hover:text-blue-700
-                    p-1.5
-                    rounded-full
-                    hover:bg-blue-50
-                  "
-                >
-                  <PlusCircle className="w-6 h-6" />
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="
-                    absolute right-2
-                    text-blue-600 hover:text-blue-700
-                    p-1.5
-                    rounded-full
-                    hover:bg-blue-50
-                  "
-                >
-                  <Send className="w-6 h-6" />
-                </button>
-              )
+            {!disabled && message?.trim() && (
+              <button
+                type="submit"
+                className="absolute right-2 text-blue-600 hover:text-blue-700 p-1.5 rounded-full 
+                         hover:bg-blue-50 transition-colors active:bg-blue-100"
+                aria-label="Send message"
+              >
+                <Send className="w-6 h-6" />
+              </button>
             )}
           </div>
-        </form>
+
+          {/* Character limit indicator - optional */}
+          {message?.length > 0 && (
+            <div className="absolute right-14 top-1/2 -translate-y-1/2 text-sm text-gray-400">
+              {message.length}/2000
+            </div>
+          )}
+
+          {disabled && (
+            <div className="absolute -top-6 left-0 right-0 text-center">
+              <span className="bg-red-50 text-red-600 px-3 py-1 rounded-full text-sm">
+                You've reached your daily limit
+              </span>
+            </div>
+          )}
+      </form>
       </div>
     </div>
   );
