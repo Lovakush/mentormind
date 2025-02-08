@@ -12,6 +12,7 @@ import {
   ExternalLink,
   ChevronDown
 } from 'lucide-react';
+import aibharatindia from '/aibharatindia.webp';
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -85,7 +86,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <img src="/logo.svg" alt="Logo" className="w-5 h-5" />
+            <img src="/" alt="Logo" className="w-5 h-5" />
           </div>
           <span className="font-semibold">MentorMind</span>
         </div>
@@ -148,7 +149,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <img src="/logo.svg" alt="Logo" className="w-5 h-5" />
+                <img src="/aibharatindia.webp" alt="Logo" className="w-5 h-5" />
               </div>
               {isOpen && <span className="font-semibold">MentorMind</span>}
             </div>
