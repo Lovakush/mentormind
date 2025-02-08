@@ -5,6 +5,7 @@ import ChatCard from '../components/features/ChatCard';
 import ChatInput from '../components/features/ChatInput';
 import ChatMessages from '../components/features/ChatMessages';
 import { BookOpen, Target, Clock, Calculator, Brain, FileText } from 'lucide-react';
+import { AI_BACKEND } from '../../constants';
 
 const Chat = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -53,7 +54,7 @@ const Chat = () => {
       if (queries.remaining > 0) queries.remaining -= 1;
       
       setMessages(prev => [...prev, { role: 'user', content: message }]);
-      const response = await fetch('http://localhost:8765/api/chat', {
+      const response = await fetch(`${AI_BACKEND}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: message })
