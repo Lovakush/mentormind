@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sendOTP, verifyOTP } from '../api/auth';
-import api from '../api/auth';
+import { sendOTP, verifyOTP, loginUser} from '../api/auth';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -65,51 +64,37 @@ const LoginPage = () => {
     }
   };
 
+  // In LoginPage.js handleVerifyOTP function
   const handleVerifyOTP = async (otpValue) => {
     setIsLoading(true);
     setError('');
     setShowRegisterPrompt(false);
   
     try {
-      // First verify OTP
-      const response = await verifyOTP(phoneNumber, otpValue);
+      console.log('Attempting login with:', phoneNumber, 'OTP:', otpValue);
+      
+      // Directly attempt login with OTP
+      const loginResponse = await loginUser(phoneNumber, otpValue);
+      console.log('Login response:', loginResponse);
   
-      if (response.success) {
-        if (!response.data.isExistingUser) {
-          // Show registration prompt for new users
+      if (loginResponse.success) {
+        // Store the token and user data
+        const { access_token, expires_at, user } = loginResponse.data;
+        localStorage.setItem('token', access_token);
+        localStorage.setItem('expires_at', expires_at);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        navigate('/chat');
+      } else {
+        if (loginResponse.error === 'User not found. Please register first.') {
           setShowRegisterPrompt(true);
         } else {
-          try {
-            // Login request
-            const loginResponse = await api.post('/auth/login', {
-              phone_number: `+91${phoneNumber}`,
-              otp_code: otpValue
-            });
-  
-            if (loginResponse.data.success) {
-              // Store token and user data
-              localStorage.setItem('token', loginResponse.data.access_token);
-              localStorage.setItem('user', JSON.stringify(loginResponse.data.user));
-              
-              // Redirect to chat
-              navigate('/chat');
-            } else {
-              setError(loginResponse.data.error || 'Login failed');
-              setOtp(['', '', '', '', '', '']);
-            }
-          } catch (loginError) {
-            console.error('Login error:', loginError);
-            setError('Login failed. Please try again.');
-            setOtp(['', '', '', '', '', '']);
-          }
+          setError(loginResponse.error || 'Login failed');
+          setOtp(['', '', '', '', '', '']);
         }
-      } else {
-        setError(response.error);
-        setOtp(['', '', '', '', '', '']);
-        document.getElementById('otp-0')?.focus();
       }
     } catch (error) {
-      console.error('OTP verification error:', error);
+      console.error('Login error:', error);
       setError('Failed to verify OTP. Please try again.');
       setOtp(['', '', '', '', '', '']);
     } finally {

@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { logout, isTokenExpired } from '../utils/auth';
 
-const AI_BACKEND = import.meta.env.VITE_AI_BACKEND || 'http://localhost:5000/api';
+const AI_BACKEND = import.meta.env.VITE_AI_BACKEND || 'http://localhost:8765/api';
 
 const api = axios.create({
   baseURL: AI_BACKEND,
@@ -99,6 +99,57 @@ export const registerUser = async (userData) => {
     return {
       success: false,
       error: error.response?.data?.error || 'Failed to register user',
+    };
+  }
+};
+
+// Add this to your auth.js
+export const loginUser = async (phone_number, otp_code) => {
+  try {
+    const response = await api.post('/auth/login', {
+      phone_number: formatPhoneNumber(phone_number),
+      otp_code
+    });
+
+    // Extract data from the response
+    const { data } = response;
+    
+    if (data.success) {
+      return {
+        success: true,
+        data: {
+          access_token: data.access_token,
+          expires_at: data.expires_at,
+          user: data.user
+        }
+      };
+    }
+
+    return {
+      success: false,
+      error: data.error || 'Login failed'
+    };
+
+  } catch (error) {
+    console.error('Login error:', error.response?.data);
+    
+    if (error.response?.status === 404) {
+      return {
+        success: false,
+        error: 'User not found. Please register first.'
+      };
+    }
+    
+    if (error.response?.status === 400) {
+      return {
+        success: false,
+        error: error.response.data.error || 'Invalid OTP'
+      };
+    }
+
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to login'
     };
   }
 };
