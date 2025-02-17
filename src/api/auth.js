@@ -104,14 +104,14 @@ export const registerUser = async (userData) => {
 };
 
 // Add this to your auth.js
-export const loginUser = async (phone_number, otp_code) => {
+export const loginUser = async (phone_number, otp_code, forceLogin = false) => {
   try {
     const response = await api.post('/auth/login', {
       phone_number: formatPhoneNumber(phone_number),
-      otp_code
+      otp_code,
+      force_login: forceLogin
     });
 
-    // Extract data from the response
     const { data } = response;
     
     if (data.success) {
@@ -131,7 +131,7 @@ export const loginUser = async (phone_number, otp_code) => {
     };
 
   } catch (error) {
-    console.error('Login error:', error.response?.data);
+    // console.error('Login error:', error.response?.data);
     
     if (error.response?.status === 404) {
       return {
@@ -140,10 +140,17 @@ export const loginUser = async (phone_number, otp_code) => {
       };
     }
     
-    if (error.response?.status === 400) {
+    if (error.response?.status === 409) {
+      // Enhanced device info handling
+      const deviceInfo = error.response.data.deviceInfo;
       return {
         success: false,
-        error: error.response.data.error || 'Invalid OTP'
+        error: 'ACTIVE_SESSION_EXISTS',
+        deviceInfo: {
+          browser: deviceInfo.browser,
+          os: deviceInfo.os,
+          lastLoginTime: deviceInfo.lastLoginTime
+        }
       };
     }
 

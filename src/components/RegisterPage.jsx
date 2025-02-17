@@ -126,7 +126,7 @@ const RegisterPage = () => {
   const boards = [
     { value: 'CBSE', label: 'CBSE' },
     { value: 'ICSE', label: 'ICSE' },
-    { value: 'STATE', label: 'State Board' }
+    { value: 'State Board', label: 'State Board' }
   ];
 
   const renderPhoneStep = () => (

@@ -2,11 +2,13 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { isAuthenticated, logout } from '../utils/auth';
+import useAuthCheck from '../hooks/useAuthCheck';
+
 
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const authenticated = isAuthenticated();
-
+  useAuthCheck();
   useEffect(() => {
     // If not authenticated, clear any stale data
     if (!authenticated) {

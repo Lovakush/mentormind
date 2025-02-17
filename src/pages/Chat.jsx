@@ -6,8 +6,11 @@ import ChatInput from '../components/features/ChatInput';
 import ChatMessages from '../components/features/ChatMessages';
 import { BookOpen, Target, Clock, Calculator, Brain, FileText } from 'lucide-react';
 import { AI_BACKEND } from '../../constants';
+import useAuthCheck from '../hooks/useAuthCheck';
+
 
 const Chat = () => {
+  useAuthCheck();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

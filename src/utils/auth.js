@@ -1,54 +1,68 @@
 // src/utils/auth.js
-export const getUser = () => {
-  const userStr = localStorage.getItem('user');
-  if (userStr) {
-    try {
-      return JSON.parse(userStr);
-    } catch (e) {
-      return null;
-    }
-  }
-  return null;
+
+export const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  localStorage.removeItem('expires_at');
+  window.location.href = '/login';
 };
 
 export const getToken = () => {
   return localStorage.getItem('token');
 };
 
-export const setAuthToken = (token) => {
-  if (token) {
-    localStorage.setItem('token', token);
-  } else {
-    localStorage.removeItem('token');
-  }
-};
-
-export const setUser = (user) => {
-  if (user) {
-    localStorage.setItem('user', JSON.stringify(user));
-  } else {
-    localStorage.removeItem('user');
-  }
-};
-
-export const logout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  window.location.href = '/login';
-};
-
-export const isTokenExpired = (token) => {
-  if (!token) return true;
+export const getUser = () => {
+  const userStr = localStorage.getItem('user');
   try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    // Add 5 minute buffer for expiration check
-    return payload.exp * 1000 < Date.now() - (5 * 60 * 1000);
-  } catch (e) {
-    return true;
+    return userStr ? JSON.parse(userStr) : null;
+  } catch (error) {
+    logout();
+    return null;
   }
+};
+
+export const isTokenExpired = () => {
+  const expiresAt = localStorage.getItem('expires_at');
+  if (!expiresAt) return true;
+  return new Date() > new Date(expiresAt);
 };
 
 export const isAuthenticated = () => {
   const token = getToken();
-  return token && !isTokenExpired(token);
+  return token && !isTokenExpired();
 };
+
+// Setup axios interceptor to handle token invalidation
+import axios from 'axios';
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      // Handle session invalidation
+      if (error.response.status === 401 && 
+          error.response.data?.code === 'SESSION_INVALIDATED') {
+        console.log('Session invalidated, logging out...');
+        logout();
+        return Promise.reject(error);
+      }
+
+      // Handle session expiration
+      if (error.response.status === 401 && 
+          error.response.data?.code === 'SESSION_EXPIRED') {
+        console.log('Session expired, logging out...');
+        logout();
+        return Promise.reject(error);
+      }
+
+      // Handle invalid token
+      if (error.response.status === 403 && 
+          error.response.data?.code === 'INVALID_TOKEN') {
+        console.log('Invalid token, logging out...');
+        logout();
+        return Promise.reject(error);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
