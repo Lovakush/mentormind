@@ -11,12 +11,12 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-lg font-semibold">M</span>
+                <span className="text-white text-lg font-semibold">A</span>
               </div>
-              <span className="text-gray-900 text-lg font-semibold">Mentor</span>
+              <span className="text-gray-900 text-lg font-semibold">AI Bharat India</span>
             </div>
             <p className="text-gray-600 text-sm">
-              MentorMind is your personal mentor to help class 8-12th students in their exam preparation
+              AiBharatIndia is your personal mentor to help class 8-12th students in their exam preparation
             </p>
             <div className="space-y-2">
               <h4 className="font-medium text-gray-900">Follow us</h4>
@@ -53,28 +53,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Explore Batches Section */}
-          <div className="space-y-4">
-            <h3 className="text-gray-900 font-medium">Explore Classes</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/focus-2027" className="text-gray-600 hover:text-gray-900">Class 8</Link>
-              </li>
-              <li>
-                <Link to="/focus-2026" className="text-gray-600 hover:text-gray-900">Class 9</Link>
-              </li>
-              <li>
-                <Link to="/prelims" className="text-gray-600 hover:text-gray-900">Class 10</Link>
-              </li>
-              <li>
-                <Link to="/prelims" className="text-gray-600 hover:text-gray-900">Class 11</Link>
-              </li>
-              <li>
-                <Link to="/prelims" className="text-gray-600 hover:text-gray-900">Class 12</Link>
-              </li>
-            </ul>
-          </div>
-
           {/* Contact Us Section */}
           <div className="space-y-4">
             <h3 className="text-gray-900 font-medium">Contact Us</h3>
@@ -83,7 +61,7 @@ const Footer = () => {
                 <div className="space-y-1">
                   <p className="text-gray-600">Student Queries</p>
                   <a href="mailto:ask@superkalam.com" className="text-blue-500 hover:text-blue-600">
-                    ask@mentormind.com
+                    ask@aibharatindia.com
                   </a>
                 </div>
               </li>
@@ -91,7 +69,7 @@ const Footer = () => {
                 <div className="space-y-1">
                   <p className="text-gray-600">General Queries</p>
                   <a href="mailto:hello@superkalam.com" className="text-blue-500 hover:text-blue-600">
-                    hello@mentormind.com
+                    hello@aibharatindia.com
                   </a>
                 </div>
               </li>
@@ -103,7 +81,7 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-600 text-sm">
-              © MentorMind Technologies Private Limited
+              © Aibharatindia Technologies Private Limited
             </p>
             <div className="flex space-x-4 text-sm">
               <Link to="/terms" className="text-gray-600 hover:text-gray-900">Terms</Link>
